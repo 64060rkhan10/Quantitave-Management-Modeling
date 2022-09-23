@@ -1,0 +1,74 @@
+---
+title: "Assignment 2 QMM"
+author: "Riba Khan"
+date: "2022-09-21"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+getwd()
+#Solution to the problem :
+#install packages
+install.packages("lpSolve")
+
+#library
+library(lpSolve)
+
+#objectve function is to maximize Z = 420L1 + 360M1 + 300S1 + 420L2 + 360M2 + 300S2 + 420L3 + 360M3 + 300S3
+f.obj<-c(420,360,300,420,360,300,420,360,300)
+
+#Subject to
+#L1 + M1 + S1 ≤ 750
+#L2 + M2 + S2 ≤ 900
+#L3 + M3 + S3 ≤ 450
+#20L1 + 15M1 + 12S1 ≤ 13000
+#20L2 + 15M2 + 12S2 ≤ 12000
+#20L3 + 15M3 + 12S3 ≤ 5000
+#L1 + L2 + L3 ≤ 900
+#M1 + M2 + M3 ≤ 1200
+#S1 + S2 + S3 ≤ 750
+
+
+#now wiriting the constraints
+f.con <-matrix(c(1,1,1,0,0,0,0,0,0,
+0,0,0,1,1,1,0,0,0,
+0,0,0,0,0,0,1,1,1,
+20,15,12,0,0,0,0,0,0,
+0,0,0,20,15,12,0,0,0,
+0,0,0,0,0,0,20,15,12,
+1,0,0,1,0,0,1,0,0,
+0,1,0,0,1,0,0,1,0,
+0,0,1,0,0,1,0,0,1), nrow = 9, byrow = TRUE)
+
+# set the direction of the inequalities (using subject to equation for this)
+f.dir <-c("<=",
+          "<=",
+          "<=",
+          "<=",
+          "<=",
+          "<=", 
+          "<=",
+          "<=",
+          "<=")
+
+#set the right hand side of the coefficients
+f.rhs <-c(750,
+          900,
+          450,
+          13000,
+          12000,
+          5000,
+          900,
+          1200,
+          750)
+
+#find the value of the objective function
+lp("max", f.obj, f.con, f.dir, f.rhs)
+## Success: the objective function is 708000
+
+#Variables final Values
+lp("max", f.obj, f.con, f.dir, f.rhs)$solution
+# [1] 350.0000 400.0000   0.0000   0.0000 400.0000 500.0000   0.0000 133.3333 250.0000
+```
